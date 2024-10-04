@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { BoilerplateController } from '../controller/boilerplate.controller';
-import { BoilerplateService } from '../service/boilerplate.service';
+import { BoilerplateController } from './boilerplate.controller';
+import { BoilerplateService } from './boilerplate.service';
 
 @Module({
   imports: [],

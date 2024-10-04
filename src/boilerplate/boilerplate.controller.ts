@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
-import { BoilerplateService } from '../service/boilerplate.service';
+import { BoilerplateService } from './boilerplate.service';
 import { Boilerplate } from '../interfaces/boilerplate.interface';
 
 @Controller('boilerplate')
