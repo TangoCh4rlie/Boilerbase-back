@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { BoilerplateService } from './boilerplate.service';
 import { CreateBoilerplateDto } from './dto/create-boilerplate.dto';
@@ -32,22 +33,22 @@ export class BoilerplateController {
 
   @Get(':id')
   @ApiOkResponse({ type: BoilerplateEntity })
-  findOne(@Param('id') id: string) {
-    return this.boilerplateService.findOne(+id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.boilerplateService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOkResponse({ type: BoilerplateEntity })
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateBoilerplateDto: UpdateBoilerplateDto,
   ) {
-    return this.boilerplateService.update(+id, updateBoilerplateDto);
+    return this.boilerplateService.update(id, updateBoilerplateDto);
   }
 
   @Delete(':id')
   @ApiOkResponse({ type: BoilerplateEntity })
-  remove(@Param('id') id: string) {
-    return this.boilerplateService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.boilerplateService.remove(id);
   }
 }

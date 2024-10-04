@@ -8,16 +8,18 @@ datasource db {
 }
 
 model User {
-  id   Int    @id @default(autoincrement())
-  username String @unique
+  id           Int           @id @default(autoincrement())
+  email        String?
+  username     String        @unique
+  boilerplates Boilerplate[]
 }
 
 model Boilerplate {
-  id Int @id @default(autoincrement())
-  name String @unique
-  gitUrl String
-  likes Int @default(0)
-  uses Int @default(0)
+  id       Int    @id @default(autoincrement())
+  name     String @unique
+  gitUrl   String
+  likes    Int    @default(0)
+  uses     Int    @default(0)
+  author   User?  @relation(fields: [authorId], references: [id])
+  authorId Int?
 }
-
-
