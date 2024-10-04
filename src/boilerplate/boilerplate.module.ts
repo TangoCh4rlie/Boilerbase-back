@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { BoilerplateController } from './boilerplate.controller';
 import { BoilerplateService } from './boilerplate.service';
+import { BoilerplateController } from './boilerplate.controller';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
-  imports: [],
   controllers: [BoilerplateController],
   providers: [BoilerplateService],
+  imports: [PrismaModule],
 })
 export class BoilerplateModule {}

@@ -8,4 +8,4 @@ services:
     environment:
       - POSTGRES_PASSWORD=root
       - POSTGRES_USER=root
-      - POSTGRES_DB=boilerplate
+      - POSTGRES_DB=boilerbase

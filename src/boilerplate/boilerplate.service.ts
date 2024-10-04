@@ -1,16 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { Boilerplate } from '../interfaces/boilerplate.interface';
+import { CreateBoilerplateDto } from './dto/create-boilerplate.dto';
+import { UpdateBoilerplateDto } from './dto/update-boilerplate.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class BoilerplateService {
-  private readonly boilerplates: Boilerplate[] = [];
+  constructor(private readonly prisma: PrismaService) {}
 
-  create(boilerplate: Boilerplate): Boilerplate {
-    this.boilerplates.push(boilerplate);
-    return boilerplate;
+  create(createBoilerplateDto: CreateBoilerplateDto) {
+    return this.prisma.boilerplate.create({
+      data: createBoilerplateDto,
+    });
   }
 
-  findAll(): Boilerplate[] {
-    return this.boilerplates;
+  findAll() {
+    return this.prisma.boilerplate.findMany();
+  }
+
+  findOne(id: number) {
+    return this.prisma.boilerplate.findUnique({
+      where: { id },
+    });
+  }
+
+  update(id: number, updateBoilerplateDto: UpdateBoilerplateDto) {
+    return this.prisma.boilerplate.update({
+      where: { id },
+      data: updateBoilerplateDto,
+    });
+  }
+
+  remove(id: number) {
+    return this.prisma.boilerplate.delete({
+      where: { id },
+    });
   }
 }

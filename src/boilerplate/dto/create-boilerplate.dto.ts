@@ -1,4 +1,4 @@
-export interface Boilerplate {
+export class CreateBoilerplateDto {
   id: number;
   name: string;
   gitUrl: string;
