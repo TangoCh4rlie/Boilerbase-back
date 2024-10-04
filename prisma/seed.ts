@@ -8,7 +8,7 @@ async function main() {
     update: {},
     create: {
       id: 1,
-      name: 'Boilerplate',
+      name: 'Boilerplate-back',
       gitUrl: 'https://github.com/TangoCh4rlie/Boilerplate-back',
     },
   });

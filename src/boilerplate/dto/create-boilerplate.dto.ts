@@ -1,7 +1,7 @@
 export class CreateBoilerplateDto {
-  id: number;
+  id?: number;
   name: string;
   gitUrl: string;
-  likes: number;
-  uses: number;
+  likes?: number;
+  uses?: number;
 }

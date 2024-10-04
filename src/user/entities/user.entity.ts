@@ -4,5 +4,5 @@ import { BoilerplateEntity } from '../../boilerplate/entities/boilerplate.entity
 export class UserEntity implements User {
   id: number;
   username: string;
-  boilerplates: BoilerplateEntity[];
+  boilerplates?: BoilerplateEntity[];
 }
