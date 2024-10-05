@@ -14,7 +14,7 @@ export class UserService {
   }
 
   findAll() {
-    return this.prisma.user.findMany();
+    return this.prisma.user.findMany({ include: { boilerplates: true } });
   }
 
   findOne(id: number) {

@@ -21,13 +21,15 @@ export class BoilerplateController {
 
   @Post()
   @ApiCreatedResponse({ type: BoilerplateEntity })
-  create(@Body() createBoilerplateDto: CreateBoilerplateDto) {
-    return this.boilerplateService.create(createBoilerplateDto);
+  async create(@Body() createBoilerplateDto: CreateBoilerplateDto) {
+    return new BoilerplateEntity(
+      await this.boilerplateService.create(createBoilerplateDto),
+    );
   }
 
   @Get()
   @ApiOkResponse({ type: BoilerplateEntity, isArray: true })
-  findAll() {
+  async findAll() {
     return this.boilerplateService.findAll();
   }
 

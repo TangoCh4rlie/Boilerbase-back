@@ -20,6 +20,9 @@ export class BoilerplateService {
   findOne(id: number) {
     return this.prisma.boilerplate.findUnique({
       where: { id },
+      include: {
+        author: true,
+      },
     });
   }
 

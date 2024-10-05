@@ -29,6 +29,7 @@ async function main() {
     create: {
       id: 1,
       username: 'TangoCh4rlie',
+      password: 'password',
     },
   });
 }

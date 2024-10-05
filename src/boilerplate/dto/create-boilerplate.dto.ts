@@ -32,6 +32,6 @@ export class CreateBoilerplateDto {
 
   @IsNotEmpty()
   @IsNumber()
-  @ApiProperty()
+  @ApiProperty({ required: false, nullable: true })
   authorId: number;
 }
