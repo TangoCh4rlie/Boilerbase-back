@@ -14,6 +14,7 @@ async function bootstrap() {
     .setTitle('BoilerBase')
     .setDescription('The BoilerBase API swagger')
     .setVersion('0.1')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
