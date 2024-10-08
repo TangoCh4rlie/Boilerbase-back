@@ -14,14 +14,24 @@ model User {
   password     String
   avatar       String?
   boilerplates Boilerplate[]
+  likes Like[]
 }
 
 model Boilerplate {
   id       Int    @id @default(autoincrement())
   name     String @unique
   gitUrl   String
-  likes    Int    @default(0)
-  uses     Int    @default(0)
+  likesCounter Int   @default(0)
+  usesCounter  Int   @default(0)
   author   User?  @relation(fields: [authorId], references: [id])
   authorId Int?
+  likes        Like[]
+}
+
+model Like {
+  id            Int         @id @default(autoincrement())
+  boilerplate   Boilerplate @relation(fields: [boilerplateId], references: [id])
+  boilerplateId Int
+  user          User        @relation(fields: [userId], references: [id])
+  userId        Int
 }

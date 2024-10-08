@@ -1,12 +1,16 @@
 import { Boilerplate } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from '../../user/entities/user.entity';
+import { LikeEntity } from '../../like/entity/like.entity';
 
 export class BoilerplateEntity implements Boilerplate {
-  constructor({ author, ...data }: Partial<BoilerplateEntity>) {
-    Object.assign(this, data);
-    if (author) {
-      this.author = new UserEntity(author);
+  constructor(partial: Partial<BoilerplateEntity>) {
+    Object.assign(this, partial);
+    if (partial.author) {
+      this.author = new UserEntity(partial.author);
+    }
+    if (partial.likes) {
+      this.likes = partial.likes.map((bp) => new LikeEntity(bp));
     }
   }
 
@@ -20,14 +24,17 @@ export class BoilerplateEntity implements Boilerplate {
   gitUrl: string;
 
   @ApiProperty()
-  likes: number;
+  likesCounter: number;
 
   @ApiProperty()
-  uses: number;
+  usesCounter: number;
 
   @ApiProperty()
   authorId: number | null;
 
   @ApiProperty({ required: false, type: UserEntity })
   author?: UserEntity;
+
+  @ApiProperty({ required: false, type: UserEntity })
+  likes?: LikeEntity[];
 }

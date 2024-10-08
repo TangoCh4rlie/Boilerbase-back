@@ -15,7 +15,14 @@ export class BoilerplateService {
 
   findAll() {
     return this.prisma.boilerplate.findMany({
-      include: { author: true },
+      include: {
+        author: true,
+        likes: {
+          select: {
+            userId: true,
+          },
+        },
+      },
     });
   }
 
@@ -24,6 +31,11 @@ export class BoilerplateService {
       where: { id },
       include: {
         author: true,
+        likes: {
+          select: {
+            userId: true,
+          },
+        },
       },
     });
   }

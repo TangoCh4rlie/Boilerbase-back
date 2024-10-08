@@ -23,12 +23,12 @@ export class CreateBoilerplateDto {
   @IsNumber()
   @IsOptional()
   @ApiProperty({ required: false, default: 0 })
-  likes?: number;
+  likesCounter?: number;
 
   @IsNumber()
   @IsOptional()
   @ApiProperty({ required: false, default: 0 })
-  uses?: number;
+  usesCounter?: number;
 
   @IsNotEmpty()
   @IsNumber()

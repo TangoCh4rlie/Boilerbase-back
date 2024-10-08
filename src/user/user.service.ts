@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { UserEntity } from './entities/user.entity';
 
 export const roundsOfHashing = 10;
 
@@ -22,7 +23,17 @@ export class UserService {
   }
 
   findAll() {
-    return this.prisma.user.findMany({ include: { boilerplates: true } });
+    // const users: UserEntity[] =
+    return this.prisma.user.findMany({
+      include: {
+        boilerplates: true,
+        likes: {
+          select: {
+            boilerplateId: true,
+          },
+        },
+      },
+    });
   }
 
   findOne(id: number) {
@@ -30,6 +41,11 @@ export class UserService {
       where: { id },
       include: {
         boilerplates: true,
+        likes: {
+          select: {
+            boilerplateId: true,
+          },
+        },
       },
     });
   }
@@ -51,6 +67,15 @@ export class UserService {
   remove(id: number) {
     return this.prisma.user.delete({
       where: { id },
+    });
+  }
+
+  async likeBoilerplate(boilerplateId: number, userId: number) {
+    return this.prisma.like.create({
+      data: {
+        userId: userId,
+        boilerplateId: boilerplateId,
+      },
     });
   }
 }

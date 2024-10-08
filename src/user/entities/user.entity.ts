@@ -2,6 +2,7 @@ import { User } from '@prisma/client';
 import { BoilerplateEntity } from '../../boilerplate/entities/boilerplate.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
+import { LikeEntity } from '../../like/entity/like.entity';
 
 export class UserEntity implements User {
   constructor(partial: Partial<UserEntity>) {
@@ -10,6 +11,9 @@ export class UserEntity implements User {
       this.boilerplates = partial.boilerplates.map(
         (bp) => new BoilerplateEntity(bp),
       );
+    }
+    if (partial.likes) {
+      this.likes = partial.likes.map((bp) => new LikeEntity(bp));
     }
   }
 
@@ -30,4 +34,7 @@ export class UserEntity implements User {
 
   @ApiProperty({ required: false, type: BoilerplateEntity, isArray: true })
   boilerplates?: BoilerplateEntity[];
+
+  @ApiProperty({ required: false, type: BoilerplateEntity, isArray: true })
+  likes?: LikeEntity[];
 }
