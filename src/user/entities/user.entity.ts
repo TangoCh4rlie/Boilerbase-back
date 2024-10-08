@@ -25,6 +25,9 @@ export class UserEntity implements User {
   @Exclude()
   password: string;
 
+  @ApiProperty({ required: false })
+  avatar: string | null;
+
   @ApiProperty({ required: false, type: BoilerplateEntity, isArray: true })
   boilerplates?: BoilerplateEntity[];
 }
