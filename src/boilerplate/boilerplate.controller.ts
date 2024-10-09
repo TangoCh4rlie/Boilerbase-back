@@ -3,10 +3,14 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpException,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { BoilerplateService } from './boilerplate.service';
 import { CreateBoilerplateDto } from './dto/create-boilerplate.dto';
@@ -15,6 +19,7 @@ import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { BoilerplateEntity } from './entities/boilerplate.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { LikeEntity } from '../like/entity/like.entity';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('boilerplate')
 @ApiTags('boilerplate')
@@ -22,17 +27,50 @@ export class BoilerplateController {
   constructor(private readonly boilerplateService: BoilerplateService) {}
 
   @Post()
-  @ApiCreatedResponse({ type: BoilerplateEntity })
+  @HttpCode(202)
+  @UseGuards(JwtAuthGuard)
+  @ApiCreatedResponse()
   async create(@Body() createBoilerplateDto: CreateBoilerplateDto) {
-    return new BoilerplateEntity(
-      await this.boilerplateService.create(createBoilerplateDto),
-    );
+    try {
+      await this.boilerplateService.create(createBoilerplateDto);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: 'The boilerbase could not be created',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        {
+          cause: error,
+        },
+      );
+    }
   }
 
   @Get()
   @ApiOkResponse({ type: BoilerplateEntity, isArray: true })
   async findAll() {
     const boilerplates = await this.boilerplateService.findAll();
+
+    return boilerplates.map((boilerplate) => {
+      const author = boilerplate.author
+        ? new UserEntity(boilerplate.author)
+        : null;
+      const likes = boilerplate.likes
+        ? boilerplate.likes.map((like) => new LikeEntity(like))
+        : [];
+      return new BoilerplateEntity({
+        ...boilerplate,
+        author,
+        likes,
+      });
+    });
+  }
+
+  @Get('top')
+  @ApiOkResponse({ type: BoilerplateEntity, isArray: true })
+  async getTopOfTheMonth() {
+    const boilerplates = await this.boilerplateService.getTopOfTheMonth();
 
     return boilerplates.map((boilerplate) => {
       const author = boilerplate.author
@@ -56,6 +94,7 @@ export class BoilerplateController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ type: BoilerplateEntity })
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -65,6 +104,7 @@ export class BoilerplateController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ type: BoilerplateEntity })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.boilerplateService.remove(id);
