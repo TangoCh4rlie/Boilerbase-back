@@ -33,7 +33,7 @@ export class BoilerplateEntity implements Boilerplate {
   authorId: number | null;
 
   @ApiProperty({ required: false, type: UserEntity })
-  author?: UserEntity;
+  author?: UserEntity | null;
 
   @ApiProperty({ required: false, type: UserEntity })
   likes?: LikeEntity[];

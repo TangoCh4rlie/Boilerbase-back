@@ -8,7 +8,6 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -74,18 +73,5 @@ export class UserController {
   @ApiOkResponse({ type: UserEntity })
   async remove(@Param('id', ParseIntPipe) id: number) {
     return new UserEntity(await this.userService.remove(id));
-  }
-
-  @Post('like/:id')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOkResponse()
-  async likeBoilerplate(
-    @Req() req: any,
-    @Param('id', ParseIntPipe) id: number,
-  ) {
-    return new LikeEntity(
-      await this.userService.likeBoilerplate(id, req.user.id),
-    );
   }
 }
