@@ -16,7 +16,13 @@ export class BoilerplateService {
   findAll() {
     return this.prisma.boilerplate.findMany({
       include: {
-        author: true,
+        author: {
+          select: {
+            id: true,
+            username: true,
+            avatar: true,
+          },
+        },
         likes: {
           select: {
             userId: true,
@@ -30,7 +36,13 @@ export class BoilerplateService {
     return this.prisma.boilerplate.findUnique({
       where: { id },
       include: {
-        author: true,
+        author: {
+          select: {
+            id: true,
+            username: true,
+            avatar: true,
+          },
+        },
         likes: {
           select: {
             userId: true,
@@ -50,6 +62,29 @@ export class BoilerplateService {
   remove(id: number) {
     return this.prisma.boilerplate.delete({
       where: { id },
+    });
+  }
+
+  getTopOfTheMonth() {
+    return this.prisma.boilerplate.findMany({
+      take: 5,
+      orderBy: {
+        usesCounter: 'desc',
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            username: true,
+            avatar: true,
+          },
+        },
+        likes: {
+          select: {
+            userId: true,
+          },
+        },
+      },
     });
   }
 }

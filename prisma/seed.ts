@@ -47,6 +47,8 @@ async function main() {
       name: 'Boilerplate-back',
       gitUrl: 'https://github.com/TangoCh4rlie/Boilerplate-back',
       authorId: 1,
+      usesCounter: 10,
+      likesCounter: 5,
     },
   });
 
@@ -58,6 +60,8 @@ async function main() {
       name: 'Boilerplate-front',
       gitUrl: 'https://github.com/TangoCh4rlie/Boilerplate-front',
       authorId: 2,
+      usesCounter: 20,
+      likesCounter: 4,
     },
   });
 
@@ -69,6 +73,8 @@ async function main() {
       name: 'Encore un super projet',
       gitUrl: 'https://github.com/TangoCh4rlie/Case',
       authorId: 2,
+      usesCounter: 13,
+      likesCounter: 1,
     },
   });
 
