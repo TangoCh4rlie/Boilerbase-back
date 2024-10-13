@@ -1,38 +1,22 @@
 import {
-  Body,
   Controller,
   Delete,
   Get,
   NotFoundException,
   Param,
   ParseIntPipe,
-  Patch,
-  Post,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import {
-  ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiOkResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { LikeEntity } from '../like/entity/like.entity';
 
 @Controller('user')
 @ApiTags('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @Post()
-  @ApiCreatedResponse({ type: UserEntity })
-  async create(@Body() createUserDto: CreateUserDto) {
-    return new UserEntity(await this.userService.create(createUserDto));
-  }
 
   @Get()
   @ApiOkResponse({ type: UserEntity, isArray: true })
@@ -54,17 +38,6 @@ export class UserController {
     const likes = user.likes.map((like) => new LikeEntity(like));
 
     return new UserEntity({ ...user, likes });
-  }
-
-  @Patch(':id')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: UserEntity })
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
-    return new UserEntity(await this.userService.update(id, updateUserDto));
   }
 
   @Delete(':id')

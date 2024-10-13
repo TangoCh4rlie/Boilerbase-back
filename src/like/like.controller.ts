@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { LikeService } from './like.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('like')

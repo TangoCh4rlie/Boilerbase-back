@@ -30,7 +30,7 @@ export class BoilerplateEntity implements Boilerplate {
   usesCounter: number;
 
   @ApiProperty()
-  authorId: number | null;
+  authorId: string | null;
 
   @ApiProperty({ required: false, type: UserEntity })
   author?: UserEntity | null;

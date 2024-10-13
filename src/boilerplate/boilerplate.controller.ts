@@ -19,7 +19,7 @@ import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { BoilerplateEntity } from './entities/boilerplate.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { LikeEntity } from '../like/entity/like.entity';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 
 @Controller('boilerplate')
 @ApiTags('boilerplate')
