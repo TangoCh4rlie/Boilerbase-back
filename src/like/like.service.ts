@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 export class LikeService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async likeBoilerplate(userId: number, boilerplateId: number) {
+  async likeBoilerplate(userId: string, boilerplateId: number) {
     await this.prisma.like.create({
       data: {
         userId: userId,
@@ -22,10 +22,9 @@ export class LikeService {
         },
       },
     });
-    // return like;
   }
 
-  async unlikeBoilerplate(userId: number, boilerplateId: number) {
+  async unlikeBoilerplate(userId: string, boilerplateId: number) {
     await this.prisma.like.delete({
       where: {
         userId_boilerplateId: {

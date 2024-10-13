@@ -26,10 +26,6 @@ export class LikeController {
   ) {
     this.likeService.likeBoilerplate(req.user.id, boilerplateId);
     return { message: 'Boilerplate liked successfully' };
-    // return new LikeEntity(
-    //   await this.likeService.likeBoilerplate(boilerplateId, req.user.id),
-    // );
-    // return { message: 'Boilerplate liked successfully' };
   }
 
   @Delete(':id')

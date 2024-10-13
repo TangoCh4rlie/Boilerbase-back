@@ -8,11 +8,11 @@ import { Strategy, Profile } from 'passport-github';
 @Injectable()
 export class GithubOAuthStrategy extends PassportStrategy(Strategy, 'github') {
   constructor(
-    configService: ConfigService<AppConfig>,
+    private configService: ConfigService<AppConfig>,
     private usersService: UserService,
   ) {
     super({
-      clientId: configService.get<string>('auth.github.clientId'),
+      clientID: configService.get<string>('auth.github.clientId'),
       clientSecret: configService.get<string>('auth.github.clientSecret'),
       callbackURL: configService.get<string>('auth.github.callbackURL'),
       scope: ['public_profile'],
@@ -20,6 +20,7 @@ export class GithubOAuthStrategy extends PassportStrategy(Strategy, 'github') {
   }
 
   async validate(accessToken: string, refreshToken: string, profile: Profile) {
+    // TODO: Stocker l'accessToken et le refreshToken dans une table de sessions
     const user = await this.usersService.findOrCreate(profile);
     if (!user) {
       throw new UnauthorizedException();

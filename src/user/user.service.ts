@@ -14,11 +14,11 @@ export class UserService {
         create: {
           id,
           username,
-          avatar: 'douze',
+          avatar: profile.photos?.[0].value ?? '',
         },
         update: {
           username,
-          avatar: 'photos',
+          avatar: profile.photos?.[0].value ?? '',
         },
       });
     }

@@ -9,9 +9,9 @@ export default (): AppConfig => ({
         parseInt(<string>process.env.JWT_EXPIRATION_TIME_SECONDS) || 900,
     },
     github: {
-      clientId: <string>process.env.AUTH_GITHUB_ID,
-      clientSecret: <string>process.env.AUTH_GITHUB_SECRET,
-      callbackURL: <string>process.env.AUTH_GITHUB_CALLBACK_URL,
+      clientId: <string>process.env.GITHUB_OAUTH_CLIENT_ID,
+      clientSecret: <string>process.env.GITHUB_OAUTH_CLIENT_SECRET,
+      callbackURL: <string>process.env.GITHUB_OAUTH_CALLBACK_URL,
     },
   },
 });

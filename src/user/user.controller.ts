@@ -4,7 +4,6 @@ import {
   Get,
   NotFoundException,
   Param,
-  ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -29,8 +28,9 @@ export class UserController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ type: UserEntity })
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id') id: string) {
     const user = await this.userService.findOne(id);
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
@@ -44,7 +44,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id') id: string) {
     return new UserEntity(await this.userService.remove(id));
   }
 }

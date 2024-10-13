@@ -8,13 +8,13 @@ import { JwtPayload } from '../entities/jwt-payload.entity';
 
 @Injectable()
 export class JwtAuthStrategy extends PassportStrategy(Strategy) {
-  constructor(configService: ConfigService<AppConfig>) {
+  constructor(private configService: ConfigService<AppConfig>) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         ExtractJwt.fromAuthHeaderAsBearerToken(),
         (request: Request) => request?.cookies?.jwt,
       ]),
-      ignoreExpiration: true,
+      ignoreExpiration: false,
       secretOrKey: configService.get<string>('auth.jwt.secret'),
     });
   }

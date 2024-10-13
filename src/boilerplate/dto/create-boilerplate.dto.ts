@@ -31,7 +31,7 @@ export class CreateBoilerplateDto {
   usesCounter?: number;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   @ApiProperty({ required: false, nullable: true })
-  authorId: number;
+  authorId: string;
 }
