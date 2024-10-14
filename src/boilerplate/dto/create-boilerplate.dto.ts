@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -15,10 +16,20 @@ export class CreateBoilerplateDto {
   name: string;
 
   @IsString()
+  @ApiProperty()
+  description: string;
+
+  @IsString()
   @IsNotEmpty()
   @MinLength(22)
   @ApiProperty()
   gitUrl: string;
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsNotEmpty({ each: true })
+  @ApiProperty()
+  languages: string[];
 
   @IsNumber()
   @IsOptional()

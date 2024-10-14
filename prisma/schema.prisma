@@ -18,11 +18,14 @@ model User {
 model Boilerplate {
   id           Int     @id @default(autoincrement())
   name         String  @unique
+  description String?
   gitUrl       String
+  languages    String[]
   likesCounter Int     @default(0)
   usesCounter  Int     @default(0)
-  author       User?   @relation(fields: [authorId], references: [id])
-  authorId     String?
+  createdAt   DateTime @default(now())
+  author      User @relation(fields: [authorId], references: [id])
+  authorId    String
   likes        Like[]
 }
 

@@ -4,10 +4,10 @@ const prisma = new PrismaClient();
 
 async function main() {
   await prisma.user.upsert({
-    where: { id: '123049213' },
+    where: { id: '50408224' },
     update: {},
     create: {
-      id: '123049213',
+      id: '50408224',
       username: 'TangoCh4rlie',
       avatar: 'https://avatars.githubusercontent.com/u/50408224?v=4',
     },
@@ -40,7 +40,7 @@ async function main() {
       id: 1,
       name: 'Boilerplate-back',
       gitUrl: 'https://github.com/TangoCh4rlie/Boilerplate-back',
-      authorId: '123049213',
+      authorId: '50408224',
       usesCounter: 10,
       likesCounter: 5,
     },
@@ -53,7 +53,7 @@ async function main() {
       id: 2,
       name: 'Boilerplate-front',
       gitUrl: 'https://github.com/TangoCh4rlie/Boilerplate-front',
-      authorId: '138430231',
+      authorId: '50408224',
       usesCounter: 20,
       likesCounter: 4,
     },
@@ -90,7 +90,7 @@ async function main() {
       id: 5,
       name: 'Clement clode sa première ligne????',
       gitUrl: 'https://github.com/TangoCh4rlie/Case',
-      authorId: '123049213',
+      authorId: '50408224',
     },
   });
 }
