@@ -42,11 +42,6 @@ export class UserService {
       where: { id },
       include: {
         boilerplates: true,
-        likes: {
-          select: {
-            boilerplateId: true,
-          },
-        },
       },
     });
   }
@@ -54,6 +49,20 @@ export class UserService {
   remove(id: string) {
     return this.prisma.user.delete({
       where: { id },
+    });
+  }
+
+  async me(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      include: {
+        boilerplates: true,
+        likes: {
+          select: {
+            boilerplateId: true,
+          },
+        },
+      },
     });
   }
 }
