@@ -18,7 +18,7 @@ export class LikeEntity implements Like {
   boilerplate?: BoilerplateEntity;
 
   @ApiProperty()
-  userId: number;
+  userId: string;
 
   @ApiProperty({ required: false, type: UserEntity })
   user?: UserEntity;

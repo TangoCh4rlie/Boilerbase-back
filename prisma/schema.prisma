@@ -8,23 +8,24 @@ datasource db {
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  email        String?
+  id           String        @id
   username     String        @unique
-  password     String
-  avatar       String?
+  avatar       String
   boilerplates Boilerplate[]
-  likes Like[]
+  likes        Like[]
 }
 
 model Boilerplate {
-  id       Int    @id @default(autoincrement())
-  name     String @unique
-  gitUrl   String
-  likesCounter Int   @default(0)
-  usesCounter  Int   @default(0)
-  author   User?  @relation(fields: [authorId], references: [id])
-  authorId Int?
+  id           Int     @id @default(autoincrement())
+  name         String  @unique
+  description String?
+  gitUrl       String
+  languages    String[]
+  likesCounter Int     @default(0)
+  usesCounter  Int     @default(0)
+  createdAt   DateTime @default(now())
+  author      User @relation(fields: [authorId], references: [id])
+  authorId    String
   likes        Like[]
 }
 
@@ -33,7 +34,7 @@ model Like {
   boilerplate   Boilerplate @relation(fields: [boilerplateId], references: [id])
   boilerplateId Int
   user          User        @relation(fields: [userId], references: [id])
-  userId        Int
+  userId        String
 
   @@unique([userId, boilerplateId])
 }

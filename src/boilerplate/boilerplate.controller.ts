@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
   HttpException,
   HttpStatus,
   Param,
@@ -19,7 +18,7 @@ import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { BoilerplateEntity } from './entities/boilerplate.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { LikeEntity } from '../like/entity/like.entity';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 
 @Controller('boilerplate')
 @ApiTags('boilerplate')
@@ -27,17 +26,21 @@ export class BoilerplateController {
   constructor(private readonly boilerplateService: BoilerplateService) {}
 
   @Post()
-  @HttpCode(202)
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @ApiCreatedResponse()
   async create(@Body() createBoilerplateDto: CreateBoilerplateDto) {
     try {
       await this.boilerplateService.create(createBoilerplateDto);
+      return {
+        status: HttpStatus.CREATED,
+        message: 'The boilerbase was created successfully',
+      };
     } catch (error) {
       throw new HttpException(
         {
           status: HttpStatus.INTERNAL_SERVER_ERROR,
-          error: 'The boilerbase could not be created',
+          // TODO: Add a better error message
+          error: 'The boilerbase could not be created' + error,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
         {
@@ -68,6 +71,7 @@ export class BoilerplateController {
   }
 
   @Get('top')
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ type: BoilerplateEntity, isArray: true })
   async getTopOfTheMonth() {
     const boilerplates = await this.boilerplateService.getTopOfTheMonth();

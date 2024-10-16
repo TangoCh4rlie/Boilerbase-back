@@ -1,38 +1,23 @@
 import {
-  Body,
   Controller,
   Delete,
   Get,
   NotFoundException,
   Param,
-  ParseIntPipe,
-  Patch,
-  Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import {
-  ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiOkResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { LikeEntity } from '../like/entity/like.entity';
+import { JwtPayload } from '../auth/entities/jwt-payload.entity';
 
 @Controller('user')
 @ApiTags('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @Post()
-  @ApiCreatedResponse({ type: UserEntity })
-  async create(@Body() createUserDto: CreateUserDto) {
-    return new UserEntity(await this.userService.create(createUserDto));
-  }
 
   @Get()
   @ApiOkResponse({ type: UserEntity, isArray: true })
@@ -44,34 +29,34 @@ export class UserController {
     });
   }
 
-  @Get(':id')
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ type: UserEntity })
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    const user = await this.userService.findOne(id);
+  async me(@Req() req: { user: JwtPayload }) {
+    const user = await this.userService.me(req.user.id);
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`User with ID ${req.user.id} not found`);
     }
     const likes = user.likes.map((like) => new LikeEntity(like));
 
     return new UserEntity({ ...user, likes });
   }
 
-  @Patch(':id')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @Get(':id')
   @ApiOkResponse({ type: UserEntity })
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
-    return new UserEntity(await this.userService.update(id, updateUserDto));
+  async findOne(@Param('id') id: string) {
+    const user = await this.userService.findOne(id);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return new UserEntity(user);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id') id: string) {
     return new UserEntity(await this.userService.remove(id));
   }
 }

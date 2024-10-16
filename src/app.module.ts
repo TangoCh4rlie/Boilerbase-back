@@ -1,16 +1,19 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from './prisma/prisma.module';
+import { ConfigModule } from '@nestjs/config';
+import { GitHubOAuthModule } from './auth/github/github-oauth.module';
 import { BoilerplateModule } from './boilerplate/boilerplate.module';
+import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
 import { LikeModule } from './like/like.module';
+import appConfig from './config/app.config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true, load: [appConfig] }),
+    GitHubOAuthModule,
     UserModule,
     BoilerplateModule,
     PrismaModule,
-    AuthModule,
     LikeModule,
   ],
 })

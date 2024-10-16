@@ -1,7 +1,6 @@
 import { User } from '@prisma/client';
-import { BoilerplateEntity } from '../../boilerplate/entities/boilerplate.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
+import { BoilerplateEntity } from '../../boilerplate/entities/boilerplate.entity';
 import { LikeEntity } from '../../like/entity/like.entity';
 
 export class UserEntity implements User {
@@ -18,19 +17,16 @@ export class UserEntity implements User {
   }
 
   @ApiProperty()
-  id: number;
+  id: string;
 
-  @ApiProperty({ required: false })
-  email: string | null;
+  @ApiProperty()
+  email: string;
 
   @ApiProperty()
   username: string;
 
-  @Exclude()
-  password: string;
-
-  @ApiProperty({ required: false })
-  avatar: string | null;
+  @ApiProperty()
+  avatar: string;
 
   @ApiProperty({ required: false, type: BoilerplateEntity, isArray: true })
   boilerplates?: BoilerplateEntity[];

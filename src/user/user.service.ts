@@ -1,28 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import * as bcrypt from 'bcrypt';
-
-export const roundsOfHashing = 10;
+import { Profile } from 'passport-github';
 
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createUserDto: CreateUserDto) {
-    createUserDto.password = await bcrypt.hash(
-      createUserDto.password,
-      roundsOfHashing,
-    );
-
-    return this.prisma.user.create({
-      data: createUserDto,
-    });
+  findOrCreate(profile: Profile) {
+    const { id, username, photos } = profile;
+    if (id != null && username != null && photos != null) {
+      return this.prisma.user.upsert({
+        where: { id },
+        create: {
+          id,
+          username,
+          avatar: profile.photos?.[0].value ?? '',
+        },
+        update: {
+          username,
+          avatar: profile.photos?.[0].value ?? '',
+        },
+      });
+    }
   }
 
   findAll() {
-    // const users: UserEntity[] =
     return this.prisma.user.findMany({
       include: {
         boilerplates: true,
@@ -35,7 +37,22 @@ export class UserService {
     });
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      include: {
+        boilerplates: true,
+      },
+    });
+  }
+
+  remove(id: string) {
+    return this.prisma.user.delete({
+      where: { id },
+    });
+  }
+
+  async me(id: string) {
     return this.prisma.user.findUnique({
       where: { id },
       include: {
@@ -46,26 +63,6 @@ export class UserService {
           },
         },
       },
-    });
-  }
-
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    if (updateUserDto.password) {
-      updateUserDto.password = await bcrypt.hash(
-        updateUserDto.password,
-        roundsOfHashing,
-      );
-    }
-
-    return this.prisma.user.update({
-      where: { id },
-      data: updateUserDto,
-    });
-  }
-
-  remove(id: number) {
-    return this.prisma.user.delete({
-      where: { id },
     });
   }
 }

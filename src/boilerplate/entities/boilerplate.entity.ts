@@ -21,7 +21,13 @@ export class BoilerplateEntity implements Boilerplate {
   name: string;
 
   @ApiProperty()
+  description: string | null;
+
+  @ApiProperty()
   gitUrl: string;
+
+  @ApiProperty()
+  languages: string[];
 
   @ApiProperty()
   likesCounter: number;
@@ -30,7 +36,10 @@ export class BoilerplateEntity implements Boilerplate {
   usesCounter: number;
 
   @ApiProperty()
-  authorId: number | null;
+  createdAt: Date;
+
+  @ApiProperty()
+  authorId: string;
 
   @ApiProperty({ required: false, type: UserEntity })
   author?: UserEntity | null;
