@@ -4,6 +4,8 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseIntPipe,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -58,5 +60,15 @@ export class UserController {
   @ApiOkResponse({ type: UserEntity })
   async remove(@Param('id') id: string) {
     return new UserEntity(await this.userService.remove(id));
+  }
+
+  @Put('view/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  addViewBoilerplate(
+    @Param('id', ParseIntPipe) boilerplateId: number,
+    @Req() req: { user: JwtPayload },
+  ) {
+    this.userService.addViewBoilerplate(boilerplateId, req.user.id);
   }
 }

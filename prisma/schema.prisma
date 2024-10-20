@@ -13,6 +13,7 @@ model User {
   avatar       String
   boilerplates Boilerplate[]
   likes        Like[]
+  views Int[]
 }
 
 model Boilerplate {

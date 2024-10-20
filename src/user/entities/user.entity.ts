@@ -33,4 +33,7 @@ export class UserEntity implements User {
 
   @ApiProperty({ required: false, type: BoilerplateEntity, isArray: true })
   likes?: LikeEntity[];
+
+  @ApiProperty({ required: false, isArray: true })
+  views: number[];
 }

@@ -65,4 +65,24 @@ export class UserService {
       },
     });
   }
+
+  async addViewBoilerplate(boilerplateId: number, userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { views: true },
+    });
+
+    if (!user?.views.includes(boilerplateId)) {
+      this.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          views: {
+            push: boilerplateId,
+          },
+        },
+      });
+    }
+  }
 }
