@@ -71,7 +71,6 @@ export class BoilerplateController {
   }
 
   @Get('top')
-  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ type: BoilerplateEntity, isArray: true })
   async getTopOfTheMonth() {
     const boilerplates = await this.boilerplateService.getTopOfTheMonth();
