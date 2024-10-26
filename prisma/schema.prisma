@@ -22,6 +22,7 @@ model Boilerplate {
   description String?
   gitUrl       String
   languages    String[]
+  logo         String?
   likesCounter Int     @default(0)
   usesCounter  Int     @default(0)
   createdAt   DateTime @default(now())
