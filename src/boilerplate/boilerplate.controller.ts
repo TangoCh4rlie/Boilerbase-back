@@ -9,6 +9,8 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { BoilerplateService } from './boilerplate.service';
@@ -17,8 +19,9 @@ import { UpdateBoilerplateDto } from './dto/update-boilerplate.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { BoilerplateEntity } from './entities/boilerplate.entity';
 import { UserEntity } from '../user/entities/user.entity';
-import { LikeEntity } from '../like/entity/like.entity';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
+import { JwtPayload } from '../auth/entities/jwt-payload.entity';
+import { JwtOptionalGuard } from '../auth/jwt/jwt-optional.guard';
 
 @Controller('boilerplate')
 @ApiTags('boilerplate')
@@ -26,7 +29,7 @@ export class BoilerplateController {
   constructor(private readonly boilerplateService: BoilerplateService) {}
 
   @Post()
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiCreatedResponse()
   async create(@Body() createBoilerplateDto: CreateBoilerplateDto) {
     try {
@@ -59,41 +62,40 @@ export class BoilerplateController {
       const author = boilerplate.author
         ? new UserEntity(boilerplate.author)
         : null;
-      const likes = boilerplate.likes
-        ? boilerplate.likes.map((like) => new LikeEntity(like))
-        : [];
       return new BoilerplateEntity({
         ...boilerplate,
         author,
-        likes,
       });
     });
   }
 
   @Get('top')
+  @UseGuards(JwtOptionalGuard)
   @ApiOkResponse({ type: BoilerplateEntity, isArray: true })
-  async getTopOfTheMonth() {
-    const boilerplates = await this.boilerplateService.getTopOfTheMonth();
+  async getTopOfTheMonth(
+    @Query('number', ParseIntPipe) number: number,
+    @Req() req: { user: JwtPayload },
+  ) {
+    const boilerplates = (await this.boilerplateService.getTopOfTheMonth(
+      number,
+      req.user ? req.user.id : '-1',
+    )) as BoilerplateEntity[];
 
     return boilerplates.map((boilerplate) => {
       const author = boilerplate.author
         ? new UserEntity(boilerplate.author)
         : null;
-      const likes = boilerplate.likes
-        ? boilerplate.likes.map((like) => new LikeEntity(like))
-        : [];
       return new BoilerplateEntity({
         ...boilerplate,
         author,
-        likes,
       });
     });
   }
 
-  @Get(':id')
+  @Get(':name')
   @ApiOkResponse({ type: BoilerplateEntity })
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.boilerplateService.findOne(id);
+  async findOne(@Param('name') name: string) {
+    return this.boilerplateService.findOneByName(name);
   }
 
   @Patch(':id')

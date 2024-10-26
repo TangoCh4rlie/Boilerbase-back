@@ -11,7 +11,6 @@ import { JwtAuthService } from '../jwt/jwt-auth.service';
 import { UserEntity } from '../../user/entities/user.entity';
 import { GithubOAuthGuard } from './github-oauth.guard';
 import { UserService } from '../../user/user.service';
-import { LikeEntity } from '../../like/entity/like.entity';
 
 @Controller('auth/github')
 export class GitHubOAuthController {
@@ -37,13 +36,11 @@ export class GitHubOAuthController {
     if (!returnUser) {
       throw new NotFoundException(`User with ID ${user.id} not found`);
     }
-    const likes = returnUser.likes.map((like) => new LikeEntity(like));
-
     res.cookie('jwt', accessToken);
 
     return {
       accessToken: accessToken,
-      user: new UserEntity({ ...user, likes }),
+      user: new UserEntity({ ...user }),
     };
   }
 }

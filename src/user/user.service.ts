@@ -28,11 +28,6 @@ export class UserService {
     return this.prisma.user.findMany({
       include: {
         boilerplates: true,
-        likes: {
-          select: {
-            boilerplateId: true,
-          },
-        },
       },
     });
   }
@@ -57,11 +52,6 @@ export class UserService {
       where: { id },
       include: {
         boilerplates: true,
-        likes: {
-          select: {
-            boilerplateId: true,
-          },
-        },
       },
     });
   }

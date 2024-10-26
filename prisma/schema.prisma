@@ -12,7 +12,6 @@ model User {
   username     String        @unique
   avatar       String
   boilerplates Boilerplate[]
-  likes        Like[]
   views Int[]
 }
 
@@ -21,22 +20,22 @@ model Boilerplate {
   name         String  @unique
   description String?
   gitUrl       String
-  languages    String[]
+  languages     String[]
+  features     String[]
   logo         String?
   likesCounter Int     @default(0)
   usesCounter  Int     @default(0)
   createdAt   DateTime @default(now())
   author      User @relation(fields: [authorId], references: [id])
   authorId    String
-  likes        Like[]
+  likes       Like[]
 }
 
 model Like {
   id            Int         @id @default(autoincrement())
-  boilerplate   Boilerplate @relation(fields: [boilerplateId], references: [id])
   boilerplateId Int
-  user          User        @relation(fields: [userId], references: [id])
   userId        String
+  Boilerplate Boilerplate[]
 
   @@unique([userId, boilerplateId])
 }

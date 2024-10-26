@@ -23,11 +23,6 @@ export class BoilerplateService {
             avatar: true,
           },
         },
-        likes: {
-          select: {
-            userId: true,
-          },
-        },
       },
     });
   }
@@ -43,9 +38,19 @@ export class BoilerplateService {
             avatar: true,
           },
         },
-        likes: {
+      },
+    });
+  }
+
+  findOneByName(name: string) {
+    return this.prisma.boilerplate.findUnique({
+      where: { name },
+      include: {
+        author: {
           select: {
-            userId: true,
+            id: true,
+            username: true,
+            avatar: true,
           },
         },
       },
@@ -65,26 +70,56 @@ export class BoilerplateService {
     });
   }
 
-  getTopOfTheMonth() {
-    return this.prisma.boilerplate.findMany({
-      take: 5,
-      orderBy: {
-        usesCounter: 'desc',
-      },
-      include: {
-        author: {
-          select: {
-            id: true,
-            username: true,
-            avatar: true,
-          },
-        },
-        likes: {
-          select: {
-            userId: true,
-          },
-        },
-      },
-    });
+  async getTopOfTheMonth(take: number, userId: string) {
+    if (userId) {
+      return await this.prisma.$queryRaw`
+        SELECT 
+          b.*, 
+          CASE WHEN l.id IS NULL THEN false ELSE true END AS "liked"
+        FROM "Boilerplate" b
+        LEFT JOIN "Like" l ON l."boilerplateId" = b.id AND l."userId" = ${userId}
+        ORDER BY b."usesCounter" DESC
+        LIMIT ${take}
+      `;
+    } else {
+      return await this.prisma.$queryRaw`
+        SELECT 
+          b.*, 
+          false AS "liked_by_user"
+        FROM "Boilerplate" b
+        ORDER BY b."usesCounter" DESC
+        LIMIT ${take}
+      `;
+    }
+    // const boilerplates = await this.prisma.boilerplate.findMany({
+    //   take: take,
+    //   orderBy: {
+    //     usesCounter: 'desc',
+    //   },
+    //   include: {
+    //     author: {
+    //       select: {
+    //         id: true,
+    //         username: true,
+    //         avatar: true,
+    //       },
+    //     },
+    //     likes: {
+    //       where: {
+    //         userId: userId,
+    //       },
+    //       select: {
+    //         boilerplateId: true,
+    //       },
+    //     },
+    //   },
+    // });
+    // console.log(boilerplates.map((boilerplate) => boilerplate.likes));
+    // return boilerplates.map((boilerplate) => {
+    //   return {
+    //     ...boilerplate,
+    //     liked: boilerplate.likes.length > 0,
+    //   };
+    // });
   }
 }

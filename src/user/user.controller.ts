@@ -13,7 +13,6 @@ import { UserService } from './user.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
-import { LikeEntity } from '../like/entity/like.entity';
 import { JwtPayload } from '../auth/entities/jwt-payload.entity';
 
 @Controller('user')
@@ -26,8 +25,7 @@ export class UserController {
   async findAll() {
     const users = await this.userService.findAll();
     return users.map((user) => {
-      const likes = user.likes.map((like) => new LikeEntity(like));
-      return new UserEntity({ ...user, likes });
+      return new UserEntity({ ...user });
     });
   }
 
@@ -39,9 +37,7 @@ export class UserController {
     if (!user) {
       throw new NotFoundException(`User with ID ${req.user.id} not found`);
     }
-    const likes = user.likes.map((like) => new LikeEntity(like));
-
-    return new UserEntity({ ...user, likes });
+    return new UserEntity({ ...user });
   }
 
   @Get(':id')
