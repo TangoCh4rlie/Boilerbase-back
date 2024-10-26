@@ -41,6 +41,9 @@ export class BoilerplateEntity implements Boilerplate {
   @ApiProperty()
   authorId: string;
 
+  @ApiProperty()
+  logo?: string;
+
   @ApiProperty({ required: false, type: UserEntity })
   author?: UserEntity | null;
 
