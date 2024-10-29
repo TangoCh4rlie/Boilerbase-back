@@ -56,19 +56,19 @@ export class UserService {
     });
   }
 
-  async addViewBoilerplate(boilerplateId: number, userId: string) {
+  async addHistoryBoilerplate(boilerplateId: number, userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { views: true },
+      select: { boilerplatesHistory: true },
     });
 
-    if (!user?.views.includes(boilerplateId)) {
+    if (!user?.boilerplatesHistory.includes(boilerplateId)) {
       this.prisma.user.update({
         where: {
           id: userId,
         },
         data: {
-          views: {
+          boilerplatesHistory: {
             push: boilerplateId,
           },
         },

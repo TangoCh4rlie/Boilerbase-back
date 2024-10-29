@@ -48,4 +48,10 @@ export class BoilerplateEntity implements Boilerplate {
 
   @ApiProperty({ required: false })
   liked?: boolean;
+
+  @ApiProperty()
+  defaultBranch: string;
+
+  @ApiProperty()
+  githubName: string;
 }

@@ -50,4 +50,12 @@ export class CreateBoilerplateDto {
   @IsOptional()
   @ApiProperty({ required: false })
   logo?: string;
+
+  @IsString()
+  @ApiProperty()
+  defaultBranch: string;
+
+  @IsString()
+  @ApiProperty()
+  githubName: string;
 }

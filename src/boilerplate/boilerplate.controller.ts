@@ -69,6 +69,37 @@ export class BoilerplateController {
     });
   }
 
+  @Get('search')
+  @ApiOkResponse({ type: BoilerplateEntity, isArray: true })
+  async findBoilerplateWithFilter(
+    @Query('name') name: string,
+    @Query('languages') languages: string[] | string | null,
+    @Query('features') features: string[] | string | null,
+  ) {
+    if (typeof languages === 'string') {
+      languages = [languages];
+    }
+    if (typeof features === 'string') {
+      features = [features];
+    }
+    const boilerplates =
+      await this.boilerplateService.findBoilerplateWithFilter(
+        name,
+        languages,
+        features,
+      );
+
+    return boilerplates.map((boilerplate) => {
+      const author = boilerplate.author
+        ? new UserEntity(boilerplate.author)
+        : null;
+      return new BoilerplateEntity({
+        ...boilerplate,
+        author,
+      });
+    });
+  }
+
   @Get('top')
   @UseGuards(JwtOptionalGuard)
   @ApiOkResponse({ type: BoilerplateEntity, isArray: true })
@@ -79,6 +110,25 @@ export class BoilerplateController {
     const boilerplates = (await this.boilerplateService.getTopOfTheMonth(
       number,
       req.user ? req.user.id : '-1',
+    )) as BoilerplateEntity[];
+
+    return boilerplates.map((boilerplate) => {
+      const author = boilerplate.author
+        ? new UserEntity(boilerplate.author)
+        : null;
+      return new BoilerplateEntity({
+        ...boilerplate,
+        author,
+      });
+    });
+  }
+
+  @Get('me/history')
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ type: BoilerplateEntity, isArray: true })
+  async getHistory(@Req() req: { user: JwtPayload }) {
+    const boilerplates = (await this.boilerplateService.getHistory(
+      req.user.id,
     )) as BoilerplateEntity[];
 
     return boilerplates.map((boilerplate) => {

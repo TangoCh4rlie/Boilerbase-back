@@ -91,35 +91,45 @@ export class BoilerplateService {
         LIMIT ${take}
       `;
     }
-    // const boilerplates = await this.prisma.boilerplate.findMany({
-    //   take: take,
-    //   orderBy: {
-    //     usesCounter: 'desc',
-    //   },
-    //   include: {
-    //     author: {
-    //       select: {
-    //         id: true,
-    //         username: true,
-    //         avatar: true,
-    //       },
-    //     },
-    //     likes: {
-    //       where: {
-    //         userId: userId,
-    //       },
-    //       select: {
-    //         boilerplateId: true,
-    //       },
-    //     },
-    //   },
-    // });
-    // console.log(boilerplates.map((boilerplate) => boilerplate.likes));
-    // return boilerplates.map((boilerplate) => {
-    //   return {
-    //     ...boilerplate,
-    //     liked: boilerplate.likes.length > 0,
-    //   };
-    // });
+  }
+
+  async findBoilerplateWithFilter(
+    name: string,
+    languages: string[] | null,
+    features: string[] | null,
+  ) {
+    return this.prisma.boilerplate.findMany({
+      where: {
+        name: { search: name },
+        ...(languages && { languages: { hasSome: languages } }),
+        ...(features && { features: { hasSome: features } }),
+      },
+      include: {
+        author: true,
+      },
+      orderBy: {
+        _relevance: {
+          fields: ['name'],
+          search: name,
+          sort: 'asc',
+        },
+      },
+    });
+  }
+
+  async getHistory(id: string) {
+    return this.prisma.boilerplate.findMany({
+      where: {
+        authorId: id,
+        id: {
+          in: (
+            await this.prisma.user.findUniqueOrThrow({
+              where: { id },
+              select: { boilerplatesHistory: true },
+            })
+          ).boilerplatesHistory,
+        },
+      },
+    });
   }
 }

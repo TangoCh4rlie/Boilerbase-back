@@ -28,5 +28,5 @@ export class UserEntity implements User {
   boilerplates?: BoilerplateEntity[];
 
   @ApiProperty({ required: false, isArray: true })
-  views: number[];
+  boilerplatesHistory: number[];
 }

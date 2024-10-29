@@ -61,10 +61,10 @@ export class UserController {
   @Put('view/:id')
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse()
-  addViewBoilerplate(
+  addHistoryBoilerplate(
     @Param('id', ParseIntPipe) boilerplateId: number,
     @Req() req: { user: JwtPayload },
   ) {
-    this.userService.addViewBoilerplate(boilerplateId, req.user.id);
+    this.userService.addHistoryBoilerplate(boilerplateId, req.user.id);
   }
 }
