@@ -100,9 +100,11 @@ export class BoilerplateService {
   ) {
     return this.prisma.boilerplate.findMany({
       where: {
-        name: { search: name },
         ...(languages && { languages: { hasSome: languages } }),
         ...(features && { features: { hasSome: features } }),
+        name: {
+          contains: name,
+        },
       },
       include: {
         author: true,

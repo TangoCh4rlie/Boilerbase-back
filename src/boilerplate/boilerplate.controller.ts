@@ -83,11 +83,11 @@ export class BoilerplateController {
       features = [features];
     }
     const boilerplates =
-      await this.boilerplateService.findBoilerplateWithFilter(
+      (await this.boilerplateService.findBoilerplateWithFilter(
         name,
         languages,
         features,
-      );
+      )) as BoilerplateEntity[];
 
     return boilerplates.map((boilerplate) => {
       const author = boilerplate.author
