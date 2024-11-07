@@ -5,6 +5,7 @@ import { BoilerplateModule } from './boilerplate/boilerplate.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { LikeModule } from './like/like.module';
+import { GithubApiModule } from './github_api/github_api.module';
 import appConfig from './config/app.config';
 
 @Module({
@@ -15,6 +16,7 @@ import appConfig from './config/app.config';
     BoilerplateModule,
     PrismaModule,
     LikeModule,
+    GithubApiModule,
   ],
 })
 export class AppModule {}

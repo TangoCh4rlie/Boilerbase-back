@@ -72,19 +72,27 @@ export class BoilerplateController {
   @Get('search')
   @ApiOkResponse({ type: BoilerplateEntity, isArray: true })
   async findBoilerplateWithFilter(
-    @Query('name') name: string,
+    @Query('names') names: string[] | string = [],
     @Query('languages') languages: string[] | string | null,
     @Query('features') features: string[] | string | null,
   ) {
+    if (typeof names === 'string') {
+      names = [names];
+    }
     if (typeof languages === 'string') {
       languages = [languages];
     }
     if (typeof features === 'string') {
       features = [features];
     }
+
+    if (names.length === 0 && !languages && !features) {
+      return [];
+    }
+
     const boilerplates =
       (await this.boilerplateService.findBoilerplateWithFilter(
-        name,
+        names,
         languages,
         features,
       )) as BoilerplateEntity[];

@@ -94,27 +94,28 @@ export class BoilerplateService {
   }
 
   async findBoilerplateWithFilter(
-    name: string,
+    names: string[],
     languages: string[] | null,
     features: string[] | null,
   ) {
+    console.log(names, languages, features);
     return this.prisma.boilerplate.findMany({
       where: {
         ...(languages && { languages: { hasSome: languages } }),
         ...(features && { features: { hasSome: features } }),
-        name: {
-          contains: name,
-        },
+        ...(names.length > 0 && {
+          OR: names
+            .filter((name: string) => name.length > 0)
+            .map((name: string) => ({
+              name: {
+                contains: name,
+                mode: 'insensitive',
+              },
+            })),
+        }),
       },
       include: {
         author: true,
-      },
-      orderBy: {
-        _relevance: {
-          fields: ['name'],
-          search: name,
-          sort: 'asc',
-        },
       },
     });
   }
