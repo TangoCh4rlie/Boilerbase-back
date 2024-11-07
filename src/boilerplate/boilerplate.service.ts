@@ -23,11 +23,6 @@ export class BoilerplateService {
             avatar: true,
           },
         },
-        likes: {
-          select: {
-            userId: true,
-          },
-        },
       },
     });
   }
@@ -43,9 +38,19 @@ export class BoilerplateService {
             avatar: true,
           },
         },
-        likes: {
+      },
+    });
+  }
+
+  findOneByName(name: string) {
+    return this.prisma.boilerplate.findUnique({
+      where: { name },
+      include: {
+        author: {
           select: {
-            userId: true,
+            id: true,
+            username: true,
+            avatar: true,
           },
         },
       },
@@ -65,24 +70,67 @@ export class BoilerplateService {
     });
   }
 
-  getTopOfTheMonth() {
+  async getTopOfTheMonth(take: number, userId: string) {
+    if (userId) {
+      return await this.prisma.$queryRaw`
+        SELECT 
+          b.*, 
+          CASE WHEN l.id IS NULL THEN false ELSE true END AS "liked"
+        FROM "Boilerplate" b
+        LEFT JOIN "Like" l ON l."boilerplateId" = b.id AND l."userId" = ${userId}
+        ORDER BY b."usesCounter" DESC
+        LIMIT ${take}
+      `;
+    } else {
+      return await this.prisma.$queryRaw`
+        SELECT 
+          b.*, 
+          false AS "liked_by_user"
+        FROM "Boilerplate" b
+        ORDER BY b."usesCounter" DESC
+        LIMIT ${take}
+      `;
+    }
+  }
+
+  async findBoilerplateWithFilter(
+    names: string[],
+    languages: string[] | null,
+    features: string[] | null,
+  ) {
+    console.log(names, languages, features);
     return this.prisma.boilerplate.findMany({
-      take: 5,
-      orderBy: {
-        usesCounter: 'desc',
+      where: {
+        ...(languages && { languages: { hasSome: languages } }),
+        ...(features && { features: { hasSome: features } }),
+        ...(names.length > 0 && {
+          OR: names
+            .filter((name: string) => name.length > 0)
+            .map((name: string) => ({
+              name: {
+                contains: name,
+                mode: 'insensitive',
+              },
+            })),
+        }),
       },
       include: {
-        author: {
-          select: {
-            id: true,
-            username: true,
-            avatar: true,
-          },
-        },
-        likes: {
-          select: {
-            userId: true,
-          },
+        author: true,
+      },
+    });
+  }
+
+  async getHistory(id: string) {
+    return this.prisma.boilerplate.findMany({
+      where: {
+        authorId: id,
+        id: {
+          in: (
+            await this.prisma.user.findUniqueOrThrow({
+              where: { id },
+              select: { boilerplatesHistory: true },
+            })
+          ).boilerplatesHistory,
         },
       },
     });

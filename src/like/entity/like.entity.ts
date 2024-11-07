@@ -1,7 +1,6 @@
 import { Like } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { BoilerplateEntity } from '../../boilerplate/entities/boilerplate.entity';
-import { UserEntity } from '../../user/entities/user.entity';
 
 export class LikeEntity implements Like {
   constructor(partial: Partial<LikeEntity>) {
@@ -14,12 +13,9 @@ export class LikeEntity implements Like {
   @ApiProperty()
   boilerplateId: number;
 
-  @ApiProperty({ required: false, type: BoilerplateEntity })
-  boilerplate?: BoilerplateEntity;
-
   @ApiProperty()
   userId: string;
 
-  @ApiProperty({ required: false, type: UserEntity })
-  user?: UserEntity;
+  @ApiProperty()
+  Boilerplate: BoilerplateEntity | null;
 }

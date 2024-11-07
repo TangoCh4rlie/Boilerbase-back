@@ -28,11 +28,6 @@ export class UserService {
     return this.prisma.user.findMany({
       include: {
         boilerplates: true,
-        likes: {
-          select: {
-            boilerplateId: true,
-          },
-        },
       },
     });
   }
@@ -57,12 +52,27 @@ export class UserService {
       where: { id },
       include: {
         boilerplates: true,
-        likes: {
-          select: {
-            boilerplateId: true,
-          },
-        },
       },
     });
+  }
+
+  async addHistoryBoilerplate(boilerplateId: number, userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { boilerplatesHistory: true },
+    });
+
+    if (!user?.boilerplatesHistory.includes(boilerplateId)) {
+      this.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          boilerplatesHistory: {
+            push: boilerplateId,
+          },
+        },
+      });
+    }
   }
 }

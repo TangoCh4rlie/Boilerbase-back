@@ -1,9 +1,8 @@
 import {
   Controller,
-  Delete,
   Param,
   ParseIntPipe,
-  Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -16,7 +15,7 @@ import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 export class LikeController {
   constructor(private readonly likeService: LikeService) {}
 
-  @Post(':id')
+  @Put(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOkResponse()
@@ -24,19 +23,6 @@ export class LikeController {
     @Req() req: any,
     @Param('id', ParseIntPipe) boilerplateId: number,
   ) {
-    this.likeService.likeBoilerplate(req.user.id, boilerplateId);
-    return { message: 'Boilerplate liked successfully' };
-  }
-
-  @Delete(':id')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOkResponse()
-  unlikeBoilerplate(
-    @Req() req: any,
-    @Param('id', ParseIntPipe) boilerplateId: number,
-  ) {
-    this.likeService.unlikeBoilerplate(req.user.id, boilerplateId);
-    return { message: 'Boilerplate unliked successfully' };
+    return this.likeService.likeUnlikeBoilerplate(req.user.id, boilerplateId);
   }
 }

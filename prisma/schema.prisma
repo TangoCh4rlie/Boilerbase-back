@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -12,29 +13,32 @@ model User {
   username     String        @unique
   avatar       String
   boilerplates Boilerplate[]
-  likes        Like[]
+  boilerplatesHistory Int[] @default([])
 }
 
 model Boilerplate {
   id           Int     @id @default(autoincrement())
   name         String  @unique
+  githubName    String
   description String?
   gitUrl       String
-  languages    String[]
+  languages     String[]
+  features     String[]
+  logo         String?
   likesCounter Int     @default(0)
   usesCounter  Int     @default(0)
   createdAt   DateTime @default(now())
   author      User @relation(fields: [authorId], references: [id])
   authorId    String
-  likes        Like[]
+  likes       Like[]
+  defaultBranch String
 }
 
 model Like {
   id            Int         @id @default(autoincrement())
-  boilerplate   Boilerplate @relation(fields: [boilerplateId], references: [id])
   boilerplateId Int
-  user          User        @relation(fields: [userId], references: [id])
   userId        String
+  Boilerplate Boilerplate[]
 
   @@unique([userId, boilerplateId])
 }
