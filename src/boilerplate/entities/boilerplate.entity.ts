@@ -1,8 +1,7 @@
-import { Boilerplate } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from '../../user/entities/user.entity';
 
-export class BoilerplateEntity implements Boilerplate {
+export class BoilerplateEntity {
   constructor(partial: Partial<BoilerplateEntity>) {
     Object.assign(this, partial);
     if (partial.author) {

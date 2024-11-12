@@ -2,16 +2,21 @@ import {
   Body,
   Controller,
   Delete,
+  FileTypeValidator,
   Get,
   HttpException,
   HttpStatus,
+  MaxFileSizeValidator,
   Param,
+  ParseFilePipe,
   ParseIntPipe,
   Patch,
   Post,
   Query,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { BoilerplateService } from './boilerplate.service';
 import { CreateBoilerplateDto } from './dto/create-boilerplate.dto';
@@ -22,6 +27,8 @@ import { UserEntity } from '../user/entities/user.entity';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { JwtPayload } from '../auth/entities/jwt-payload.entity';
 import { JwtOptionalGuard } from '../auth/jwt/jwt-optional.guard';
+import { Express } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('boilerplate')
 @ApiTags('boilerplate')
@@ -58,7 +65,7 @@ export class BoilerplateController {
   async findAll() {
     const boilerplates = await this.boilerplateService.findAll();
 
-    return boilerplates.map((boilerplate) => {
+    return boilerplates.map((boilerplate: any) => {
       const author = boilerplate.author
         ? new UserEntity(boilerplate.author)
         : null;
@@ -171,5 +178,28 @@ export class BoilerplateController {
   @ApiOkResponse({ type: BoilerplateEntity })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.boilerplateService.remove(id);
+  }
+
+  @Post('banner')
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  @UseInterceptors(FileInterceptor('image'))
+  uploadBanner(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          // 500kb
+          new MaxFileSizeValidator({ maxSize: 500000 }),
+          new FileTypeValidator({ fileType: /image\/(png|jpeg|jpg)/ }),
+        ],
+      }),
+    )
+    banner: Express.Multer.File,
+  ) {
+    return {
+      filename: banner.originalname,
+      size: banner.size,
+      mimetype: banner.mimetype,
+    };
   }
 }

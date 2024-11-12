@@ -1,8 +1,7 @@
-import { Like } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { BoilerplateEntity } from '../../boilerplate/entities/boilerplate.entity';
 
-export class LikeEntity implements Like {
+export class LikeEntity {
   constructor(partial: Partial<LikeEntity>) {
     Object.assign(this, partial);
   }
