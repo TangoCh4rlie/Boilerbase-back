@@ -1,33 +1,3 @@
-#apiVersion: apps/v1
-#kind: Deployment
-#metadata:
-#  name: boilerbase-api
-#  namespace: boilerbase
-#  labels:
-#    app: boilerbase-api
-#spec:
-#  replicas: 1
-#  selector:
-#    matchLabels:
-#      app: boilerbase-api
-#  template:
-#    metadata:
-#      labels:
-#        app: boilerbase-api
-#    spec:
-#      containers:
-#        - name: boilerbase-api
-#          image: tang0ch4rlie/boilerbaseapi
-#          #          ports:
-#          #            - containerPort: 8080
-#          env:
-#            - name: DATABASE_URL
-#              value: postgresql://boilerbase:boilerbase@postgres-boilerbase-svc.boilerbase.svc.cluster.local:5432/boilerbase?schema=boilerbase
-#          imagePullPolicy: Always
-#          resources:
-#            requests:
-#              cpu: '100m'
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -48,17 +18,9 @@ spec:
           image: tang0ch4rlie/boilerbaseapi:latest
           ports:
             - containerPort: 3000
-          env:
-            - name: DATABASE_URL
-              value: postgresql://ps_user:SecurePassword@postgres-boilerbase-svc.boilerbase.svc.cluster.local:5432/ps_db?schema=boilerbase
-#              valueFrom:
-#                secretKeyRef:
-#                  name: postgres-secret
-#                  key: DATABASE_URL
+          envFrom:
+            - configMapRef:
+                name: api-secret
           resources:
             limits:
               cpu: "100m"
-#          lifecycle:
-#            postStart:
-#              exec:
-#                command: ["/bin/sh", "-c", "npx prisma migrate dev; npx prisma migrate dev"]

@@ -1,0 +1,16 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: boilerbase-api-ingress-https
+  namespace: boilerbase
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`api.super-sympa.fr`)
+      kind: Rule
+      services:
+        - name: boilerbase-api-svc
+          port: 3000
+  tls:
+    secretName: boilerbase-api-certificate-secret
