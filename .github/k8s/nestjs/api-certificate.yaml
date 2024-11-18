@@ -10,6 +10,6 @@ spec:
 
   issuerRef:
     kind: ClusterIssuer
-    name: cert-manager-boilerbase-api-stats #notre issuer
+    name: boilerbase-webapp-selfsigned-issuer #notre issuer
   # Secret pour stocker les certificats
-  secretName: boilerbase-api-certificate-secret
+  secretName: boilerbase-api-certificate-cert-secret-tls
