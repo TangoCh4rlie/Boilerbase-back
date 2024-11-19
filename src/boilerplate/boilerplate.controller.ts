@@ -2,21 +2,16 @@ import {
   Body,
   Controller,
   Delete,
-  FileTypeValidator,
   Get,
   HttpException,
   HttpStatus,
-  MaxFileSizeValidator,
   Param,
-  ParseFilePipe,
   ParseIntPipe,
   Patch,
   Post,
   Query,
   Req,
-  UploadedFile,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { BoilerplateService } from './boilerplate.service';
 import { CreateBoilerplateDto } from './dto/create-boilerplate.dto';
@@ -27,8 +22,6 @@ import { UserEntity } from '../user/entities/user.entity';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { JwtPayload } from '../auth/entities/jwt-payload.entity';
 import { JwtOptionalGuard } from '../auth/jwt/jwt-optional.guard';
-import { Express } from 'express';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('boilerplate')
 @ApiTags('boilerplate')
@@ -46,6 +39,7 @@ export class BoilerplateController {
         message: 'The boilerbase was created successfully',
       };
     } catch (error) {
+      console.log(error);
       throw new HttpException(
         {
           status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -180,26 +174,28 @@ export class BoilerplateController {
     return this.boilerplateService.remove(id);
   }
 
-  @Post('banner')
-  @UseGuards(JwtAuthGuard)
-  @ApiOkResponse()
-  @UseInterceptors(FileInterceptor('image'))
-  uploadBanner(
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          // 500kb
-          new MaxFileSizeValidator({ maxSize: 500000 }),
-          new FileTypeValidator({ fileType: /image\/(png|jpeg|jpg)/ }),
-        ],
-      }),
-    )
-    banner: Express.Multer.File,
-  ) {
-    return {
-      filename: banner.originalname,
-      size: banner.size,
-      mimetype: banner.mimetype,
-    };
-  }
+  // @Post('logo/:name')
+  // @UseGuards(JwtAuthGuard)
+  // @ApiOkResponse()
+  // @UseInterceptors(FileInterceptor('image'))
+  // uploadLogo(
+  //   @Param('name') name: string,
+  //   @UploadedFile(
+  //     new ParseFilePipe({
+  //       validators: [
+  //         // 500kb
+  //         new MaxFileSizeValidator({ maxSize: 500000 }),
+  //         new FileTypeValidator({ fileType: /image\/(png|jpeg|jpg)/ }),
+  //       ],
+  //     }),
+  //   )
+  //   banner: Express.Multer.File,
+  // ) {
+  //   return this.boilerplateService.uploadLogo(name, banner);
+  //   return {
+  //     filename: banner.originalname,
+  //     size: banner.size,
+  //     mimetype: banner.mimetype,
+  //   };
+  // }
 }

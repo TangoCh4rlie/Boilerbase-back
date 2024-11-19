@@ -38,7 +38,6 @@ async function main() {
     where: { id: 1 },
     update: {},
     create: {
-      id: 1,
       name: 'Boilerbase-back',
       githubName: 'Boilerbase-back',
       languages: ['lua', 'c'],
@@ -46,7 +45,7 @@ async function main() {
       gitUrl: 'https://github.com/TangoCh4rlie/Boilerbase-back',
       authorId: '50408224',
       usesCounter: 10,
-      likesCounter: 5,
+      likesCounter: 300,
       logo: 'https://avatars.githubusercontent.com/u/50408224?v=4',
       features: ['auth', 'database'],
       description:
@@ -107,7 +106,6 @@ async function main() {
     where: { id: 2 },
     update: {},
     create: {
-      id: 2,
       name: 'Boilerbase-front',
       githubName: 'Boilerbase-front',
       defaultBranch: 'main',
@@ -125,7 +123,6 @@ async function main() {
     where: { id: 3 },
     update: {},
     create: {
-      id: 3,
       name: 'Encore un super projet',
       githubName: 'Case',
       defaultBranch: 'main',
@@ -143,7 +140,6 @@ async function main() {
     where: { id: 4 },
     update: {},
     create: {
-      id: 4,
       name: "Clement ouvre l'éditeur OMG",
       githubName: 'Case',
       defaultBranch: 'main',
@@ -158,7 +154,6 @@ async function main() {
     where: { id: 5 },
     update: {},
     create: {
-      id: 5,
       name: 'Clement clode sa première ligne????',
       githubName: 'Case',
       defaultBranch: 'main',
@@ -173,12 +168,11 @@ async function main() {
     where: { id: 6 },
     update: {},
     create: {
-      id: 6,
       name: 'Amazing Project 1',
       githubName: 'ProjectOne',
       description: 'An amazing boilerplate for web development',
       gitUrl: 'https://github.com/user1/ProjectOne',
-      languages: ['javascript', 'html5', 'css'],
+      languages: ['javascript', 'html5', 'css3'],
       features: ['auth', 'database', 'CI/CD'],
       logo: 'https://avatars.githubusercontent.com/u/50408224?v=4',
       likesCounter: 120,
@@ -192,7 +186,6 @@ async function main() {
     where: { id: 11 },
     update: {},
     create: {
-      id: 11,
       name: 'Data Science Kit',
       githubName: 'DSKit',
       description: 'Boilerplate for data science projects',
@@ -211,7 +204,6 @@ async function main() {
     where: { id: 7 },
     update: {},
     create: {
-      id: 7,
       name: 'Backend Pro',
       githubName: 'BackendPro',
       description: 'Backend boilerplate for REST APIs',
@@ -230,12 +222,11 @@ async function main() {
     where: { id: 8 },
     update: {},
     create: {
-      id: 8,
       name: 'Frontend Deluxe',
       githubName: 'FrontendDeluxe',
       description: 'Frontend boilerplate with modern tools',
       gitUrl: 'https://github.com/user4/FrontendDeluxe',
-      languages: ['javascript', 'vue', 'css'],
+      languages: ['javascript', 'vuejs', 'css3'],
       features: ['routing', 'state management', 'responsive design'],
       logo: 'https://avatars.githubusercontent.com/u/50408224?v=4',
       likesCounter: 95,
@@ -249,7 +240,6 @@ async function main() {
     where: { id: 9 },
     update: {},
     create: {
-      id: 9,
       name: 'E-commerce Starter',
       githubName: 'EcommerceStarter',
       description: 'A starter boilerplate for e-commerce websites',
@@ -268,7 +258,6 @@ async function main() {
     where: { id: 10 },
     update: {},
     create: {
-      id: 10,
       name: 'Microservice Magic',
       githubName: 'MicroserviceMagic',
       description: 'Boilerplate for microservice architectures',

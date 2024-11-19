@@ -63,7 +63,7 @@ export class UserService {
     });
 
     if (!user?.boilerplatesHistory.includes(boilerplateId)) {
-      this.prisma.user.update({
+      await this.prisma.user.update({
         where: {
           id: userId,
         },
