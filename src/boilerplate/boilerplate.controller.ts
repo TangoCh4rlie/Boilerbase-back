@@ -31,8 +31,12 @@ export class BoilerplateController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @ApiCreatedResponse()
-  async create(@Body() createBoilerplateDto: CreateBoilerplateDto) {
+  async create(
+    @Req() req: { user: JwtPayload },
+    @Body() createBoilerplateDto: CreateBoilerplateDto,
+  ) {
     try {
+      createBoilerplateDto.logo = req.user.avatar;
       await this.boilerplateService.create(createBoilerplateDto);
       return {
         status: HttpStatus.CREATED,

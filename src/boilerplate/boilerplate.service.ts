@@ -8,9 +8,16 @@ export class BoilerplateService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(createBoilerplateDto: CreateBoilerplateDto) {
-    return this.prisma.boilerplate.create({
-      data: createBoilerplateDto,
-    });
+    try {
+      return this.prisma.boilerplate.create({
+        data: createBoilerplateDto,
+      });
+    } catch (error) {
+      if (error.code === 'P2002' && error.meta?.target?.includes('name')) {
+        throw new Error('Boilerplate name must be unique');
+      }
+      throw error;
+    }
   }
 
   findAll() {
@@ -133,6 +140,7 @@ export class BoilerplateService {
           ).boilerplatesHistory,
         },
       },
+      take: 10,
     });
   }
 }

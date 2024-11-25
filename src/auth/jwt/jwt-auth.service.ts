@@ -8,10 +8,11 @@ export class JwtAuthService {
   constructor(private jwtService: JwtService) {}
 
   login(user: UserEntity) {
-    const { id, username } = user;
+    const { id, username, avatar } = user;
     const payload: JwtPayload = {
       id,
       username,
+      avatar,
     };
 
     return {
