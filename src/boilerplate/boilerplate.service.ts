@@ -92,7 +92,7 @@ export class BoilerplateService {
       return await this.prisma.$queryRaw`
         SELECT 
           b.*, 
-          false AS "liked_by_user"
+          false AS "liked"
         FROM "Boilerplate" b
         ORDER BY b."usesCounter" DESC
         LIMIT ${take}

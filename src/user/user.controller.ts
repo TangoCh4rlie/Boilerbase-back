@@ -37,6 +37,7 @@ export class UserController {
     if (!user) {
       throw new NotFoundException(`User with ID ${req.user.id} not found`);
     }
+    console.log(user.boilerplates);
     return new UserEntity({ ...user });
   }
 

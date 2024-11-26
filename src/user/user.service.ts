@@ -48,12 +48,34 @@ export class UserService {
   }
 
   async me(id: string) {
-    return this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { id },
       include: {
-        boilerplates: true,
+        boilerplates: {
+          include: {
+            likes: {
+              where: {
+                userId: id,
+              },
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
       },
     });
+
+    if (!user) return null;
+
+    // Transformer les boilerplates pour ajouter la propriété liked
+    return {
+      ...user,
+      boilerplates: user.boilerplates.map((boilerplate) => ({
+        ...boilerplate,
+        liked: boilerplate.likes.length > 0,
+      })),
+    };
   }
 
   async addHistoryBoilerplate(boilerplateId: number, userId: string) {
