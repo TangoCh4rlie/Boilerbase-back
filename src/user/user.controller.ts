@@ -1,50 +1,71 @@
 import {
   Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
   Delete,
+  Get,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+  Put,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
+import { JwtPayload } from '../auth/entities/jwt-payload.entity';
 
 @Controller('user')
 @ApiTags('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  @ApiCreatedResponse({ type: UserEntity })
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
-  }
-
   @Get()
   @ApiOkResponse({ type: UserEntity, isArray: true })
-  findAll() {
-    return this.userService.findAll();
+  async findAll() {
+    const users = await this.userService.findAll();
+    return users.map((user: any) => {
+      return new UserEntity({ ...user });
+    });
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ type: UserEntity })
+  async me(@Req() req: { user: JwtPayload }) {
+    const user = await this.userService.me(req.user.id);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${req.user.id} not found`);
+    }
+    console.log(user.boilerplates);
+    return new UserEntity({ ...user });
   }
 
   @Get(':id')
   @ApiOkResponse({ type: UserEntity })
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
+  async findOne(@Param('id') id: string) {
+    const user = await this.userService.findOne(id);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
 
-  @Patch(':id')
-  @ApiOkResponse({ type: UserEntity })
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+    return new UserEntity(user);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ type: UserEntity })
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return new UserEntity(await this.userService.remove(id));
+  }
+
+  @Put('view/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  addHistoryBoilerplate(
+    @Param('id', ParseIntPipe) boilerplateId: number,
+    @Req() req: { user: JwtPayload },
+  ) {
+    this.userService.addHistoryBoilerplate(boilerplateId, req.user.id);
   }
 }

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-boilerbase
+  namespace: boilerbase
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-boilerbase
+  template:
+    metadata:
+      labels:
+        app: postgres-boilerbase
+    spec:
+      containers:
+        - name: postgres-boilerbase
+          image: 'postgres:16'
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: postgres-secret
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgresdata
+      volumes:
+        - name: postgresdata
+          persistentVolumeClaim:
+            claimName: postgres-boilerbase-volume-claim

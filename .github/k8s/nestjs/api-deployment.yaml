@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boilerbase-api
+  namespace: boilerbase
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: boilerbase-api
+  template:
+    metadata:
+      labels:
+        app: boilerbase-api
+    spec:
+      containers:
+        - name: nestjs-container
+          image: tang0ch4rlie/boilerbaseapi:latest
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: api-secret
+          resources:
+            limits:
+              cpu: "100m"
